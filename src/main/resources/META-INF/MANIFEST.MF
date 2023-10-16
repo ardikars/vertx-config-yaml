@@ -1,0 +1,1 @@
+Automatic-Module-Name: com.ardikars.vertx.config.yaml
