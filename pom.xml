@@ -6,7 +6,7 @@
 
     <groupId>com.ardikars.vertx.config</groupId>
     <artifactId>vertx-config-yaml</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 
     <name>Vertx Config YAML</name>
     <description>Vertx Config YAML</description>
@@ -40,7 +40,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.test.skip>true</maven.test.skip>
-        <stack.version>4.4.5</stack.version>
+        <stack.version>4.4.0</stack.version>
         <nexus.staging.maven.plugin.version>1.6.13</nexus.staging.maven.plugin.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>

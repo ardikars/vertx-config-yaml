@@ -57,13 +57,14 @@ public final class YamlProcessor implements ConfigProcessor {
         }
 
         // Use executeBlocking even if the bytes are in memory
-        return vertx.executeBlocking(() -> {
+        return vertx.executeBlocking(promise -> {
             try {
                 final Yaml yamlMapper = new Yaml(new SafeConstructor(DEFAULT_OPTIONS));
                 final Map<Object, Object> doc = yamlMapper.load(input.toString(StandardCharsets.UTF_8));
-                return jsonify(doc);
+                final JsonObject json = jsonify(doc);
+                promise.complete(json);
             } catch (ClassCastException e) {
-                throw new DecodeException("Failed to decode YAML", e);
+                promise.fail(new DecodeException("Failed to decode YAML", e));
             }
         });
     }
@@ -188,22 +189,30 @@ public final class YamlProcessor implements ConfigProcessor {
     public static Object normalizeObject0(String str) {
         final String strTrimmed = str.trim();
         if (isInteger(strTrimmed)) {
-            final long val = Long.parseLong(strTrimmed);
-            if (val > 0x7fffffffL) {
-                return val;
-            } else {
-                return (int) val;
+            try {
+                final long val = Long.parseLong(strTrimmed);
+                if (val > 0x7fffffffL) {
+                    return val;
+                } else {
+                    return (int) val;
+                }
+            } catch (Exception e) {
+                return except(strTrimmed);
             }
         } else {
             try {
                 return Double.parseDouble(strTrimmed);
             } catch (Exception e) {
-                if ((strTrimmed.startsWith("\"") && strTrimmed.endsWith("\"")) || ((strTrimmed.startsWith("'") && strTrimmed.endsWith("'")))) {
-                    return strTrimmed.substring(1, strTrimmed.length() - 1);
-                } else {
-                    return strTrimmed;
-                }
+                return except(strTrimmed);
             }
+        }
+    }
+
+    private static String except(String strTrimmed) {
+        if ((strTrimmed.startsWith("\"") && strTrimmed.endsWith("\"")) || ((strTrimmed.startsWith("'") && strTrimmed.endsWith("'")))) {
+            return strTrimmed.substring(1, strTrimmed.length() - 1);
+        } else {
+            return strTrimmed;
         }
     }
 }
