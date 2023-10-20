@@ -188,6 +188,11 @@ public final class YamlProcessor implements ConfigProcessor {
 
     public static Object normalizeObject0(String str) {
         final String strTrimmed = str.trim();
+        if ("true".equals(strTrimmed) || "TRUE".equals(strTrimmed) || "True".equals(strTrimmed)) {
+            return true;
+        } else if ("false".equals(strTrimmed) || "FALSE".equals(strTrimmed) || "False".equals(strTrimmed)) {
+            return false;
+        }
         if (isInteger(strTrimmed)) {
             try {
                 final long val = Long.parseLong(strTrimmed);
